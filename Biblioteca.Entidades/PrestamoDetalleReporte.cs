@@ -5,6 +5,7 @@ namespace Biblioteca.Entidades
     public class PrestamoDetalleReporte
     {
         public int PrestamoId { get; set; }
+        public int LibroId { get; set; }
         public string SocioNombre { get; set; }
         public string LibroTitulo { get; set; }
         public DateTime FechaPrestamo { get; set; }
