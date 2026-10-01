@@ -1,0 +1,55 @@
+<Window x:Class="Biblioteca.WPF.Vistas.SociosWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Mantenimiento de socios" Height="540" Width="960"
+        WindowStartupLocation="CenterOwner" Loaded="Window_Loaded"
+        Background="{StaticResource Fondo}" FontFamily="Segoe UI" FontSize="13">
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Style="{StaticResource Encabezado}">
+            <TextBlock Text="Mantenimiento de socios" Style="{StaticResource Titulo}" />
+        </Border>
+        <Grid x:Name="contenido" Margin="14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="300" />
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource Tarjeta}" Margin="0,0,12,0">
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,10">
+                        <TextBlock DockPanel.Dock="Left" Text="Buscar por nombre o DNI:" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <Button DockPanel.Dock="Right" x:Name="btnBuscar" Content="Buscar" Click="BtnBuscar_Click" Margin="6,0,0,0" IsDefault="True" />
+                        <TextBox x:Name="txtFiltro" />
+                    </DockPanel>
+                    <TextBlock DockPanel.Dock="Bottom" x:Name="txtTotal" Margin="0,8,0,0" Foreground="#666" />
+                    <DataGrid x:Name="dgSocios" SelectionChanged="DgSocios_SelectionChanged" RowStyle="{StaticResource FilaConEstado}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding SocioId}" Width="45" />
+                            <DataGridTextColumn Header="DNI" Binding="{Binding DNI}" Width="95" />
+                            <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="1.3*" />
+                            <DataGridTextColumn Header="Correo" Binding="{Binding Email}" Width="1.7*" />
+                            <DataGridTextColumn Header="Estado" Binding="{Binding Activo, Converter={StaticResource EstadoConverter}}" Width="75" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource Tarjeta}">
+                <StackPanel>
+                    <TextBlock x:Name="txtModo" Text="Nuevo socio" Style="{StaticResource Subtitulo}" />
+                    <TextBlock Text="DNI" Style="{StaticResource Etiqueta}" />
+                    <TextBox x:Name="txtDni" MaxLength="15" />
+                    <TextBlock Text="Nombre completo" Style="{StaticResource Etiqueta}" />
+                    <TextBox x:Name="txtNombre" MaxLength="140" />
+                    <TextBlock Text="Correo electrónico" Style="{StaticResource Etiqueta}" />
+                    <TextBox x:Name="txtEmail" MaxLength="160" />
+                    <WrapPanel Margin="0,18,0,0">
+                        <Button x:Name="btnGuardar" Content="Guardar" Click="BtnGuardar_Click" Style="{StaticResource BotonExito}" Margin="0,0,6,6" />
+                        <Button x:Name="btnNuevo" Content="Nuevo" Click="BtnNuevo_Click" Style="{StaticResource BotonSecundario}" Margin="0,0,6,6" />
+                        <Button x:Name="btnEliminar" Content="Dar de baja" Click="BtnEliminar_Click" Style="{StaticResource BotonPeligro}" Margin="0,0,6,6" />
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>

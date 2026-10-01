@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.props" Condition="Exists('$(MSBuildToolsPath)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9758CCF3-C214-498C-9F6E-F7C370802E11}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Biblioteca.WPF</RootNamespace>
+    <AssemblyName>Biblioteca.WPF</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>7.3</LangVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget><DebugSymbols>true</DebugSymbols><DebugType>full</DebugType><Optimize>false</Optimize><OutputPath>bin\Debug\</OutputPath><DefineConstants>DEBUG;TRACE</DefineConstants><ErrorReport>prompt</ErrorReport><WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget><DebugType>pdbonly</DebugType><Optimize>true</Optimize><OutputPath>bin\Release\</OutputPath><DefineConstants>TRACE</DefineConstants><ErrorReport>prompt</ErrorReport><WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xaml"><RequiredTargetFramework>4.0</RequiredTargetFramework></Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></ApplicationDefinition>
+    <Compile Include="App.xaml.cs"><DependentUpon>App.xaml</DependentUpon><SubType>Code</SubType></Compile>
+    <Page Include="MainWindow.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+    <Compile Include="MainWindow.xaml.cs"><DependentUpon>MainWindow.xaml</DependentUpon><SubType>Code</SubType></Compile>
+    <Page Include="Vistas\LibrosWindow.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+    <Compile Include="Vistas\LibrosWindow.xaml.cs"><DependentUpon>LibrosWindow.xaml</DependentUpon><SubType>Code</SubType></Compile>
+    <Page Include="Vistas\SociosWindow.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+    <Compile Include="Vistas\SociosWindow.xaml.cs"><DependentUpon>SociosWindow.xaml</DependentUpon><SubType>Code</SubType></Compile>
+    <Page Include="Vistas\PrestamoWindow.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+    <Compile Include="Vistas\PrestamoWindow.xaml.cs"><DependentUpon>PrestamoWindow.xaml</DependentUpon><SubType>Code</SubType></Compile>
+    <Page Include="Vistas\DevolucionWindow.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+    <Compile Include="Vistas\DevolucionWindow.xaml.cs"><DependentUpon>DevolucionWindow.xaml</DependentUpon><SubType>Code</SubType></Compile>
+    <Page Include="Vistas\ReporteWindow.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
+    <Compile Include="Vistas\ReporteWindow.xaml.cs"><DependentUpon>ReporteWindow.xaml</DependentUpon><SubType>Code</SubType></Compile>
+    <Compile Include="Servicios.cs" />
+    <Compile Include="Operacion.cs" />
+    <Compile Include="EstadoConverter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Biblioteca.Entidades\Biblioteca.Entidades.csproj"><Project>{2AA65DE5-64B6-49D6-9A52-0F7AB7F19A10}</Project><Name>Biblioteca.Entidades</Name></ProjectReference>
+    <ProjectReference Include="..\Biblioteca.Negocio\Biblioteca.Negocio.csproj"><Project>{F95558F1-5EE2-49ED-9ED4-EEB9809AFFA5}</Project><Name>Biblioteca.Negocio</Name></ProjectReference>
+    <ProjectReference Include="..\Biblioteca.Datos\Biblioteca.Datos.csproj"><Project>{319B5EA7-C271-4EE9-A471-14C981D22E43}</Project><Name>Biblioteca.Datos</Name></ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -4,10 +4,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Biblioteca.Entidades;
+using Biblioteca.Negocio;
 
 namespace Biblioteca.Datos
 {
-    public class LibroDatos
+    public class LibroDatos : ILibroRepositorio
     {
         public async Task<List<Libro>> BuscarAsync(string filtro)
         {

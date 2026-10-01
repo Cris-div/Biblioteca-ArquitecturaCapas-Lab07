@@ -1,19 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Biblioteca.Datos;
 using Biblioteca.Entidades;
 
 namespace Biblioteca.Negocio
 {
     public class LibroNegocio
     {
-        private readonly LibroDatos _libros;
-        private readonly AutorDatos _autores;
+        private readonly ILibroRepositorio _libros;
+        private readonly IAutorRepositorio _autores;
 
-        public LibroNegocio() : this(new LibroDatos(), new AutorDatos()) { }
-        public LibroNegocio(LibroDatos libros) : this(libros, new AutorDatos()) { }
-        public LibroNegocio(LibroDatos libros, AutorDatos autores)
+        public LibroNegocio(ILibroRepositorio libros, IAutorRepositorio autores)
         {
             _libros = libros ?? throw new ArgumentNullException(nameof(libros));
             _autores = autores ?? throw new ArgumentNullException(nameof(autores));

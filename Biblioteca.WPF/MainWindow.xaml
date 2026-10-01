@@ -1,0 +1,63 @@
+<Window x:Class="Biblioteca.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Biblioteca - Menú principal" Height="440" Width="720"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize"
+        Background="{StaticResource Fondo}" FontFamily="Segoe UI" FontSize="13">
+    <Window.Resources>
+        <Style x:Key="Mosaico" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Height" Value="96" />
+            <Setter Property="Margin" Value="8" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </Window.Resources>
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Style="{StaticResource Encabezado}">
+            <StackPanel>
+                <TextBlock Text="Sistema de Biblioteca" Style="{StaticResource Titulo}" />
+                <TextBlock Text="Arquitectura en capas · WPF · ADO.NET" Foreground="#CFE0F3" Margin="0,2,0,0" />
+            </StackPanel>
+        </Border>
+        <TextBlock DockPanel.Dock="Bottom" x:Name="txtPie" Margin="20,0,20,12" Foreground="#666"
+                   Text="Seleccione una opción para continuar." />
+        <UniformGrid Columns="3" Rows="2" Margin="12">
+            <Button x:Name="btnLibros" Style="{StaticResource Mosaico}" Click="BtnLibros_Click">
+                <StackPanel>
+                    <TextBlock Text="📚" FontSize="26" HorizontalAlignment="Center" />
+                    <TextBlock Text="Libros" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="btnSocios" Style="{StaticResource Mosaico}" Click="BtnSocios_Click">
+                <StackPanel>
+                    <TextBlock Text="👥" FontSize="26" HorizontalAlignment="Center" />
+                    <TextBlock Text="Socios" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="btnPrestamo" Style="{StaticResource Mosaico}" Click="BtnPrestamo_Click" Background="{StaticResource Exito}">
+                <StackPanel>
+                    <TextBlock Text="📤" FontSize="26" HorizontalAlignment="Center" />
+                    <TextBlock Text="Nuevo préstamo" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="btnDevolucion" Style="{StaticResource Mosaico}" Click="BtnDevolucion_Click" Background="#B9770E">
+                <StackPanel>
+                    <TextBlock Text="📥" FontSize="26" HorizontalAlignment="Center" />
+                    <TextBlock Text="Devolución" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="btnReporte" Style="{StaticResource Mosaico}" Click="BtnReporte_Click" Background="#6C3483">
+                <StackPanel>
+                    <TextBlock Text="📊" FontSize="26" HorizontalAlignment="Center" />
+                    <TextBlock Text="Reporte de préstamos" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="btnSalir" Style="{StaticResource Mosaico}" Click="BtnSalir_Click" Background="#7F8C9D">
+                <StackPanel>
+                    <TextBlock Text="⏻" FontSize="26" HorizontalAlignment="Center" />
+                    <TextBlock Text="Salir" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </UniformGrid>
+    </DockPanel>
+</Window>

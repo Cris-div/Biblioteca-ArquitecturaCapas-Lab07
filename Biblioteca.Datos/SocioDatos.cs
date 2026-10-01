@@ -4,10 +4,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Biblioteca.Entidades;
+using Biblioteca.Negocio;
 
 namespace Biblioteca.Datos
 {
-    public class SocioDatos
+    public class SocioDatos : ISocioRepositorio
     {
         public async Task<List<Socio>> BuscarAsync(string filtro)
         {

@@ -3,10 +3,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Biblioteca.Entidades;
+using Biblioteca.Negocio;
 
 namespace Biblioteca.Datos
 {
-    public class DetallePrestamoDatos
+    public class DetallePrestamoDatos : IDetallePrestamoRepositorio
     {
         internal async Task InsertarAsync(SqlConnection conexion, SqlTransaction transaccion, int prestamoId, int libroId)
         {

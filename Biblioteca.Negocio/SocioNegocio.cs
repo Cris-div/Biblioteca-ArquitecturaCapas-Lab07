@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Biblioteca.Datos;
 using Biblioteca.Entidades;
 
 namespace Biblioteca.Negocio
 {
     public class SocioNegocio
     {
-        private readonly SocioDatos _socios;
+        private readonly ISocioRepositorio _socios;
 
-        public SocioNegocio() : this(new SocioDatos()) { }
-        public SocioNegocio(SocioDatos socios) { _socios = socios ?? throw new ArgumentNullException(nameof(socios)); }
+        public SocioNegocio(ISocioRepositorio socios) { _socios = socios ?? throw new ArgumentNullException(nameof(socios)); }
 
         public Task<List<Socio>> BuscarAsync(string filtro) => _socios.BuscarAsync(filtro);
 

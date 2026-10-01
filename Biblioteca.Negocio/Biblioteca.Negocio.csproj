@@ -21,8 +21,7 @@
   <ItemGroup><Reference Include="System" /><Reference Include="System.Core" /></ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Biblioteca.Entidades\Biblioteca.Entidades.csproj"><Project>{2AA65DE5-64B6-49D6-9A52-0F7AB7F19A10}</Project><Name>Biblioteca.Entidades</Name></ProjectReference>
-    <ProjectReference Include="..\Biblioteca.Datos\Biblioteca.Datos.csproj"><Project>{319B5EA7-C271-4EE9-A471-14C981D22E43}</Project><Name>Biblioteca.Datos</Name></ProjectReference>
   </ItemGroup>
-  <ItemGroup><Compile Include="ReglaNegocioException.cs" /><Compile Include="LibroNegocio.cs" /><Compile Include="SocioNegocio.cs" /><Compile Include="PrestamoNegocio.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="ReglaNegocioException.cs" /><Compile Include="ILibroRepositorio.cs" /><Compile Include="IAutorRepositorio.cs" /><Compile Include="ISocioRepositorio.cs" /><Compile Include="IPrestamoRepositorio.cs" /><Compile Include="IDetallePrestamoRepositorio.cs" /><Compile Include="LibroNegocio.cs" /><Compile Include="SocioNegocio.cs" /><Compile Include="PrestamoNegocio.cs" /></ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

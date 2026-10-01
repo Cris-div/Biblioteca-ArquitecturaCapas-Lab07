@@ -19,7 +19,7 @@
     <DebugType>pdbonly</DebugType><Optimize>true</Optimize><OutputPath>bin\Release\</OutputPath><DefineConstants>TRACE</DefineConstants><WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup><Reference Include="System" /><Reference Include="System.Core" /><Reference Include="System.Data" /><Reference Include="System.Configuration" /></ItemGroup>
-  <ItemGroup><ProjectReference Include="..\Biblioteca.Entidades\Biblioteca.Entidades.csproj"><Project>{2AA65DE5-64B6-49D6-9A52-0F7AB7F19A10}</Project><Name>Biblioteca.Entidades</Name></ProjectReference></ItemGroup>
+  <ItemGroup><ProjectReference Include="..\Biblioteca.Entidades\Biblioteca.Entidades.csproj"><Project>{2AA65DE5-64B6-49D6-9A52-0F7AB7F19A10}</Project><Name>Biblioteca.Entidades</Name></ProjectReference><ProjectReference Include="..\Biblioteca.Negocio\Biblioteca.Negocio.csproj"><Project>{F95558F1-5EE2-49ED-9ED4-EEB9809AFFA5}</Project><Name>Biblioteca.Negocio</Name></ProjectReference></ItemGroup>
   <ItemGroup><Compile Include="Conexion.cs" /><Compile Include="AutorDatos.cs" /><Compile Include="LibroDatos.cs" /><Compile Include="SocioDatos.cs" /><Compile Include="PrestamoDatos.cs" /><Compile Include="DetallePrestamoDatos.cs" /></ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

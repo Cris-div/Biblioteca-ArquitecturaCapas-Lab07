@@ -1,0 +1,79 @@
+<Window x:Class="Biblioteca.WPF.Vistas.PrestamoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Registro de préstamo" Height="600" Width="1180"
+        WindowStartupLocation="CenterOwner" Loaded="Window_Loaded"
+        Background="{StaticResource Fondo}" FontFamily="Segoe UI" FontSize="13">
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Style="{StaticResource Encabezado}">
+            <TextBlock Text="Registro de préstamo" Style="{StaticResource Titulo}" />
+        </Border>
+        <Grid x:Name="contenido" Margin="14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1.3*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource Tarjeta}" Margin="0,0,10,0">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="1. Seleccionar socio" Style="{StaticResource Subtitulo}" />
+                    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                        <Button DockPanel.Dock="Right" x:Name="btnBuscarSocio" Content="Buscar" Click="BtnBuscarSocio_Click" Margin="6,0,0,0" />
+                        <TextBox x:Name="txtFiltroSocio" ToolTip="Nombre o DNI" />
+                    </DockPanel>
+                    <DataGrid x:Name="dgSocios" SelectionChanged="DgSocios_SelectionChanged">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="DNI" Binding="{Binding DNI}" Width="85" />
+                            <DataGridTextColumn Header="Nombre" Binding="{Binding Nombre}" Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource Tarjeta}" Margin="0,0,10,0">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="2. Agregar libros" Style="{StaticResource Subtitulo}" />
+                    <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                        <Button DockPanel.Dock="Right" x:Name="btnBuscarLibro" Content="Buscar" Click="BtnBuscarLibro_Click" Margin="6,0,0,0" />
+                        <TextBox x:Name="txtFiltroLibro" ToolTip="Título o autor" />
+                    </DockPanel>
+                    <Button DockPanel.Dock="Bottom" x:Name="btnAgregar" Content="Agregar libro al préstamo ➜" Click="BtnAgregar_Click"
+                            HorizontalAlignment="Right" Margin="0,8,0,0" />
+                    <DataGrid x:Name="dgLibros" MouseDoubleClick="DgLibros_MouseDoubleClick">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Título" Binding="{Binding Titulo}" Width="1.4*" />
+                            <DataGridTextColumn Header="Autor" Binding="{Binding NombreAutor}" Width="*" />
+                            <DataGridTextColumn Header="Disp." Binding="{Binding Ejemplares}" Width="50" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="2" Style="{StaticResource Tarjeta}">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="3. Detalle del préstamo" Style="{StaticResource Subtitulo}" />
+                    <TextBlock DockPanel.Dock="Top" Text="Socio" Style="{StaticResource Etiqueta}" Margin="0,0,0,3" />
+                    <Border DockPanel.Dock="Top" Background="#EEF3FA" CornerRadius="4" Padding="8,6">
+                        <TextBlock x:Name="txtSocio" Text="(ninguno)" FontWeight="SemiBold" TextWrapping="Wrap" />
+                    </Border>
+                    <StackPanel DockPanel.Dock="Bottom">
+                        <TextBlock Text="Fecha límite de devolución" Style="{StaticResource Etiqueta}" />
+                        <DatePicker x:Name="dpFechaLimite" />
+                        <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                            <Button x:Name="btnRegistrar" Content="Registrar préstamo" Click="BtnRegistrar_Click" Style="{StaticResource BotonExito}" />
+                            <Button x:Name="btnCancelar" Content="Limpiar" Click="BtnCancelar_Click" Style="{StaticResource BotonSecundario}" />
+                        </StackPanel>
+                    </StackPanel>
+                    <DockPanel DockPanel.Dock="Bottom" Margin="0,6,0,0">
+                        <TextBlock x:Name="txtCantidad" Text="0 libro(s)" Foreground="#666" VerticalAlignment="Center" />
+                        <Button x:Name="btnQuitar" Content="Quitar" Click="BtnQuitar_Click" Style="{StaticResource BotonPeligro}"
+                                HorizontalAlignment="Right" Margin="0" />
+                    </DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Libros agregados" Style="{StaticResource Etiqueta}" />
+                    <ListBox x:Name="lstAgregados" DisplayMemberPath="Titulo" BorderBrush="{StaticResource Borde}" />
+                </DockPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>

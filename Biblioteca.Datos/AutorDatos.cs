@@ -3,10 +3,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Biblioteca.Entidades;
+using Biblioteca.Negocio;
 
 namespace Biblioteca.Datos
 {
-    public class AutorDatos
+    public class AutorDatos : IAutorRepositorio
     {
         public async Task<List<Autor>> ListarActivosAsync()
         {

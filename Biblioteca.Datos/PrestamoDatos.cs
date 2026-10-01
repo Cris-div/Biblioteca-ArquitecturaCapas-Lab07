@@ -4,10 +4,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using Biblioteca.Entidades;
+using Biblioteca.Negocio;
 
 namespace Biblioteca.Datos
 {
-    public class PrestamoDatos
+    public class PrestamoDatos : IPrestamoRepositorio
     {
         private readonly DetallePrestamoDatos _detalles;
 
@@ -40,7 +41,6 @@ namespace Biblioteca.Datos
                 {
                     try
                     {
-                        // Bloquea al socio para serializar préstamos concurrentes del mismo socio.
                         const string bloquearSocio = @"SELECT SocioId FROM dbo.Socios WITH (UPDLOCK, HOLDLOCK)
                                                        WHERE SocioId = @SocioId AND Activo = 1;";
                         using (var comando = new SqlCommand(bloquearSocio, conexion, transaccion))

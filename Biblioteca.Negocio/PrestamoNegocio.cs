@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Biblioteca.Datos;
 using Biblioteca.Entidades;
 
 namespace Biblioteca.Negocio
@@ -10,14 +9,12 @@ namespace Biblioteca.Negocio
     public class PrestamoNegocio
     {
         private const decimal MultaPorDia = 1.50m;
-        private readonly SocioDatos _socios;
-        private readonly LibroDatos _libros;
-        private readonly PrestamoDatos _prestamos;
-        private readonly DetallePrestamoDatos _detalles;
+        private readonly ISocioRepositorio _socios;
+        private readonly ILibroRepositorio _libros;
+        private readonly IPrestamoRepositorio _prestamos;
+        private readonly IDetallePrestamoRepositorio _detalles;
 
-        public PrestamoNegocio() : this(new SocioDatos(), new LibroDatos(), new PrestamoDatos(), new DetallePrestamoDatos()) { }
-
-        public PrestamoNegocio(SocioDatos socios, LibroDatos libros, PrestamoDatos prestamos, DetallePrestamoDatos detalles)
+        public PrestamoNegocio(ISocioRepositorio socios, ILibroRepositorio libros, IPrestamoRepositorio prestamos, IDetallePrestamoRepositorio detalles)
         {
             _socios = socios ?? throw new ArgumentNullException(nameof(socios));
             _libros = libros ?? throw new ArgumentNullException(nameof(libros));
@@ -54,7 +51,6 @@ namespace Biblioteca.Negocio
             }
             catch (InvalidOperationException ex)
             {
-                // La capa de Datos vuelve a comprobar stock y estado dentro de la transacción.
                 throw new ReglaNegocioException(ex.Message);
             }
         }
