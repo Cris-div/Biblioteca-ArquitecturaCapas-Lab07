@@ -107,13 +107,17 @@ namespace Biblioteca.Datos
 
         public async Task DarDeBajaAsync(int libroId)
         {
-            const string sql = "UPDATE dbo.Libros SET Activo = 0 WHERE LibroId = @LibroId;";
+            const string sql = @"UPDATE dbo.Libros WITH (UPDLOCK, HOLDLOCK) SET Activo = 0
+                                 WHERE LibroId = @LibroId AND Activo = 1
+                                   AND NOT EXISTS (SELECT 1 FROM dbo.DetallePrestamo
+                                                   WHERE LibroId = @LibroId AND FechaDevolucion IS NULL);";
             using (var conexion = Conexion.Crear())
             using (var comando = new SqlCommand(sql, conexion))
             {
                 comando.Parameters.Add("@LibroId", SqlDbType.Int).Value = libroId;
                 await conexion.OpenAsync().ConfigureAwait(false);
-                await comando.ExecuteNonQueryAsync().ConfigureAwait(false);
+                if (await comando.ExecuteNonQueryAsync().ConfigureAwait(false) != 1)
+                    throw new InvalidOperationException("No se puede dar de baja un libro inexistente o con préstamos pendientes.");
             }
         }
 

@@ -9,6 +9,14 @@ namespace Biblioteca.Datos
 {
     public class PrestamoDatos
     {
+        private readonly DetallePrestamoDatos _detalles;
+
+        public PrestamoDatos() : this(new DetallePrestamoDatos()) { }
+        public PrestamoDatos(DetallePrestamoDatos detalles)
+        {
+            _detalles = detalles ?? throw new ArgumentNullException(nameof(detalles));
+        }
+
         public async Task<int> ContarLibrosPendientesAsync(int socioId)
         {
             const string sql = @"SELECT COUNT(*) FROM dbo.Prestamos p
@@ -23,7 +31,7 @@ namespace Biblioteca.Datos
             }
         }
 
-        public async Task<int> RegistrarAsync(int socioId, IList<int> libroIds, DateTime fechaPrestamo, DateTime fechaLimite)
+        public async Task<int> RegistrarAsync(int socioId, IList<int> libroIds, DateTime fechaPrestamo, DateTime fechaLimite, int maxLibrosPendientes)
         {
             using (var conexion = Conexion.Crear())
             {
@@ -32,10 +40,30 @@ namespace Biblioteca.Datos
                 {
                     try
                     {
+                        // Bloquea al socio para serializar préstamos concurrentes del mismo socio.
+                        const string bloquearSocio = @"SELECT SocioId FROM dbo.Socios WITH (UPDLOCK, HOLDLOCK)
+                                                       WHERE SocioId = @SocioId AND Activo = 1;";
+                        using (var comando = new SqlCommand(bloquearSocio, conexion, transaccion))
+                        {
+                            comando.Parameters.Add("@SocioId", SqlDbType.Int).Value = socioId;
+                            var socio = await comando.ExecuteScalarAsync().ConfigureAwait(false);
+                            if (socio == null || socio == DBNull.Value)
+                                throw new InvalidOperationException("El socio no existe o está inactivo.");
+                        }
+
+                        const string contarPendientes = @"SELECT COUNT(*) FROM dbo.Prestamos p
+                            INNER JOIN dbo.DetallePrestamo d ON d.PrestamoId = p.PrestamoId
+                            WHERE p.SocioId = @SocioId AND d.FechaDevolucion IS NULL;";
+                        using (var comando = new SqlCommand(contarPendientes, conexion, transaccion))
+                        {
+                            comando.Parameters.Add("@SocioId", SqlDbType.Int).Value = socioId;
+                            var pendientes = Convert.ToInt32(await comando.ExecuteScalarAsync().ConfigureAwait(false));
+                            if (pendientes + libroIds.Count > maxLibrosPendientes)
+                                throw new InvalidOperationException("Un socio no puede tener más de 3 libros pendientes.");
+                        }
+
                         const string insertarPrestamo = @"INSERT INTO dbo.Prestamos (SocioId, FechaPrestamo, FechaLimite, Estado)
-                            SELECT @SocioId, @FechaPrestamo, @FechaLimite, N'Pendiente'
-                            WHERE EXISTS (SELECT 1 FROM dbo.Socios WITH (UPDLOCK, HOLDLOCK)
-                                          WHERE SocioId = @SocioId AND Activo = 1);
+                            VALUES (@SocioId, @FechaPrestamo, @FechaLimite, N'Pendiente');
                             SELECT CAST(SCOPE_IDENTITY() AS INT);";
                         int prestamoId;
                         using (var comando = new SqlCommand(insertarPrestamo, conexion, transaccion))
@@ -44,8 +72,6 @@ namespace Biblioteca.Datos
                             comando.Parameters.Add("@FechaPrestamo", SqlDbType.Date).Value = fechaPrestamo.Date;
                             comando.Parameters.Add("@FechaLimite", SqlDbType.Date).Value = fechaLimite.Date;
                             var id = await comando.ExecuteScalarAsync().ConfigureAwait(false);
-                            if (id == null || id == DBNull.Value)
-                                throw new InvalidOperationException("El socio no existe o está inactivo.");
                             prestamoId = Convert.ToInt32(id);
                         }
 
@@ -61,14 +87,7 @@ namespace Biblioteca.Datos
                                     throw new InvalidOperationException("Un libro no existe, está inactivo o no tiene ejemplares disponibles.");
                             }
 
-                            const string insertarDetalle = @"INSERT INTO dbo.DetallePrestamo (PrestamoId, LibroId, FechaDevolucion)
-                                                             VALUES (@PrestamoId, @LibroId, NULL);";
-                            using (var comando = new SqlCommand(insertarDetalle, conexion, transaccion))
-                            {
-                                comando.Parameters.Add("@PrestamoId", SqlDbType.Int).Value = prestamoId;
-                                comando.Parameters.Add("@LibroId", SqlDbType.Int).Value = libroId;
-                                await comando.ExecuteNonQueryAsync().ConfigureAwait(false);
-                            }
+                            await _detalles.InsertarAsync(conexion, transaccion, prestamoId, libroId).ConfigureAwait(false);
                         }
 
                         transaccion.Commit();
@@ -109,16 +128,8 @@ namespace Biblioteca.Datos
                             return null;
                         }
 
-                        const string actualizarDetalle = @"UPDATE dbo.DetallePrestamo SET FechaDevolucion = @FechaDevolucion
-                            WHERE PrestamoId = @PrestamoId AND LibroId = @LibroId AND FechaDevolucion IS NULL;";
-                        using (var comando = new SqlCommand(actualizarDetalle, conexion, transaccion))
-                        {
-                            comando.Parameters.Add("@FechaDevolucion", SqlDbType.Date).Value = fechaDevolucion.Date;
-                            comando.Parameters.Add("@PrestamoId", SqlDbType.Int).Value = prestamoId;
-                            comando.Parameters.Add("@LibroId", SqlDbType.Int).Value = libroId;
-                            if (await comando.ExecuteNonQueryAsync().ConfigureAwait(false) != 1)
-                                throw new InvalidOperationException("El ejemplar ya fue devuelto.");
-                        }
+                        await _detalles.MarcarDevueltoAsync(conexion, transaccion, prestamoId, libroId, fechaDevolucion)
+                            .ConfigureAwait(false);
 
                         const string reponerStock = "UPDATE dbo.Libros SET Ejemplares = Ejemplares + 1 WHERE LibroId = @LibroId;";
                         using (var comando = new SqlCommand(reponerStock, conexion, transaccion))

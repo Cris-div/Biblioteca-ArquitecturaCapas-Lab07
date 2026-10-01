@@ -8,6 +8,33 @@ namespace Biblioteca.Datos
 {
     public class DetallePrestamoDatos
     {
+        internal async Task InsertarAsync(SqlConnection conexion, SqlTransaction transaccion, int prestamoId, int libroId)
+        {
+            const string sql = @"INSERT INTO dbo.DetallePrestamo (PrestamoId, LibroId, FechaDevolucion)
+                                 VALUES (@PrestamoId, @LibroId, NULL);";
+            using (var comando = new SqlCommand(sql, conexion, transaccion))
+            {
+                comando.Parameters.Add("@PrestamoId", SqlDbType.Int).Value = prestamoId;
+                comando.Parameters.Add("@LibroId", SqlDbType.Int).Value = libroId;
+                await comando.ExecuteNonQueryAsync().ConfigureAwait(false);
+            }
+        }
+
+        internal async Task MarcarDevueltoAsync(SqlConnection conexion, SqlTransaction transaccion,
+            int prestamoId, int libroId, System.DateTime fechaDevolucion)
+        {
+            const string sql = @"UPDATE dbo.DetallePrestamo SET FechaDevolucion = @FechaDevolucion
+                                 WHERE PrestamoId = @PrestamoId AND LibroId = @LibroId AND FechaDevolucion IS NULL;";
+            using (var comando = new SqlCommand(sql, conexion, transaccion))
+            {
+                comando.Parameters.Add("@FechaDevolucion", SqlDbType.Date).Value = fechaDevolucion.Date;
+                comando.Parameters.Add("@PrestamoId", SqlDbType.Int).Value = prestamoId;
+                comando.Parameters.Add("@LibroId", SqlDbType.Int).Value = libroId;
+                if (await comando.ExecuteNonQueryAsync().ConfigureAwait(false) != 1)
+                    throw new System.InvalidOperationException("El ejemplar ya fue devuelto.");
+            }
+        }
+
         public async Task<List<PrestamoDetalleReporte>> ListarPendientesAsync(int socioId)
         {
             const string sql = @"SELECT p.PrestamoId, d.LibroId, s.Nombre, l.Titulo, p.FechaPrestamo,

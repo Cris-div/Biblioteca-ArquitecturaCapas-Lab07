@@ -104,13 +104,18 @@ namespace Biblioteca.Datos
 
         public async Task DarDeBajaAsync(int socioId)
         {
-            const string sql = "UPDATE dbo.Socios SET Activo = 0 WHERE SocioId = @SocioId;";
+            const string sql = @"UPDATE dbo.Socios WITH (UPDLOCK, HOLDLOCK) SET Activo = 0
+                                 WHERE SocioId = @SocioId AND Activo = 1
+                                   AND NOT EXISTS
+                                   (SELECT 1 FROM dbo.Prestamos p INNER JOIN dbo.DetallePrestamo d ON d.PrestamoId = p.PrestamoId
+                                    WHERE p.SocioId = @SocioId AND d.FechaDevolucion IS NULL);";
             using (var conexion = Conexion.Crear())
             using (var comando = new SqlCommand(sql, conexion))
             {
                 comando.Parameters.Add("@SocioId", SqlDbType.Int).Value = socioId;
                 await conexion.OpenAsync().ConfigureAwait(false);
-                await comando.ExecuteNonQueryAsync().ConfigureAwait(false);
+                if (await comando.ExecuteNonQueryAsync().ConfigureAwait(false) != 1)
+                    throw new InvalidOperationException("No se puede dar de baja un socio inexistente o con préstamos pendientes.");
             }
         }
 
