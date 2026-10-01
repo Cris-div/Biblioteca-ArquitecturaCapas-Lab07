@@ -1,6 +1,21 @@
-**/bin/
-**/obj/
-.vs/
+# Compilación de .NET
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+TestResults/
 .dotnet-home/
+
+# Visual Studio y editores
+.vs/
+.vscode/
+.idea/
 *.user
 *.suo
+*.userosscache
+*.sln.docstates
+
+# Temporales
+*.tmp
+*.cache
