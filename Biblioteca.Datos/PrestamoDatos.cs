@@ -150,7 +150,7 @@ namespace Biblioteca.Datos
 
         public async Task<List<PrestamoDetalleReporte>> ReportarPorFechasAsync(DateTime desde, DateTime hasta)
         {
-            const string sql = @"SELECT p.PrestamoId, s.Nombre, l.Titulo, p.FechaPrestamo,
+            const string sql = @"SELECT p.PrestamoId, d.LibroId, s.Nombre, l.Titulo, p.FechaPrestamo,
                                         p.FechaLimite, p.Estado, d.FechaDevolucion
                                  FROM dbo.Prestamos p
                                  INNER JOIN dbo.Socios s ON s.SocioId = p.SocioId
@@ -170,10 +170,11 @@ namespace Biblioteca.Datos
                     while (await lector.ReadAsync().ConfigureAwait(false))
                         resultado.Add(new PrestamoDetalleReporte
                         {
-                            PrestamoId = lector.GetInt32(0), SocioNombre = lector.GetString(1),
-                            LibroTitulo = lector.GetString(2), FechaPrestamo = lector.GetDateTime(3),
-                            FechaLimite = lector.GetDateTime(4), Estado = lector.GetString(5),
-                            FechaDevolucion = lector.IsDBNull(6) ? (DateTime?)null : lector.GetDateTime(6)
+                            PrestamoId = lector.GetInt32(0), LibroId = lector.GetInt32(1),
+                            SocioNombre = lector.GetString(2), LibroTitulo = lector.GetString(3),
+                            FechaPrestamo = lector.GetDateTime(4), FechaLimite = lector.GetDateTime(5),
+                            Estado = lector.GetString(6),
+                            FechaDevolucion = lector.IsDBNull(7) ? (DateTime?)null : lector.GetDateTime(7)
                         });
                 }
             }
