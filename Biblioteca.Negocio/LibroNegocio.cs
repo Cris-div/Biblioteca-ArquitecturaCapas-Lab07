@@ -9,11 +9,18 @@ namespace Biblioteca.Negocio
     public class LibroNegocio
     {
         private readonly LibroDatos _libros;
+        private readonly AutorDatos _autores;
 
-        public LibroNegocio() : this(new LibroDatos()) { }
-        public LibroNegocio(LibroDatos libros) { _libros = libros ?? throw new ArgumentNullException(nameof(libros)); }
+        public LibroNegocio() : this(new LibroDatos(), new AutorDatos()) { }
+        public LibroNegocio(LibroDatos libros) : this(libros, new AutorDatos()) { }
+        public LibroNegocio(LibroDatos libros, AutorDatos autores)
+        {
+            _libros = libros ?? throw new ArgumentNullException(nameof(libros));
+            _autores = autores ?? throw new ArgumentNullException(nameof(autores));
+        }
 
         public Task<List<Libro>> BuscarAsync(string filtro) => _libros.BuscarAsync(filtro);
+        public Task<List<Autor>> ListarAutoresAsync() => _autores.ListarActivosAsync();
 
         public async Task<int> InsertarAsync(Libro libro)
         {

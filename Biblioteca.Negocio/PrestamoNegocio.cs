@@ -48,7 +48,15 @@ namespace Biblioteca.Negocio
 
             var hoy = DateTime.Today;
             if (fechaLimite.Date < hoy) throw new ReglaNegocioException("La fecha límite no puede ser anterior a hoy.");
-            return await _prestamos.RegistrarAsync(socioId, ids, hoy, fechaLimite.Date).ConfigureAwait(false);
+            try
+            {
+                return await _prestamos.RegistrarAsync(socioId, ids, hoy, fechaLimite.Date).ConfigureAwait(false);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // La capa de Datos vuelve a comprobar stock y estado dentro de la transacción.
+                throw new ReglaNegocioException(ex.Message);
+            }
         }
 
         public Task<List<PrestamoDetalleReporte>> ListarPendientesAsync(int socioId)
@@ -56,9 +64,22 @@ namespace Biblioteca.Negocio
             return _detalles.ListarPendientesAsync(socioId);
         }
 
+        public Task<List<PrestamoDetalleReporte>> ListarPendientesAsync()
+        {
+            return _detalles.ListarTodosPendientesAsync();
+        }
+
         public async Task<decimal> RegistrarDevolucionAsync(int prestamoId, int libroId, DateTime fechaDevolucion)
         {
-            var fechaLimite = await _prestamos.RegistrarDevolucionAsync(prestamoId, libroId, fechaDevolucion.Date).ConfigureAwait(false);
+            DateTime? fechaLimite;
+            try
+            {
+                fechaLimite = await _prestamos.RegistrarDevolucionAsync(prestamoId, libroId, fechaDevolucion.Date).ConfigureAwait(false);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new ReglaNegocioException(ex.Message);
+            }
             if (!fechaLimite.HasValue)
                 throw new ReglaNegocioException("El préstamo o libro no existe, o el ejemplar ya fue devuelto.");
             var diasRetraso = Math.Max(0, (fechaDevolucion.Date - fechaLimite.Value.Date).Days);
