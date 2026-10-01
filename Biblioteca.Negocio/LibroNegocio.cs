@@ -48,7 +48,14 @@ namespace Biblioteca.Negocio
                 throw new ReglaNegocioException("El libro no existe o ya está dado de baja.");
             if (await _libros.TienePrestamosPendientesAsync(libroId).ConfigureAwait(false))
                 throw new ReglaNegocioException("No se puede dar de baja un libro con préstamos pendientes.");
-            await _libros.DarDeBajaAsync(libroId).ConfigureAwait(false);
+            try
+            {
+                await _libros.DarDeBajaAsync(libroId).ConfigureAwait(false);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new ReglaNegocioException(ex.Message);
+            }
         }
 
         private static void Validar(Libro libro)

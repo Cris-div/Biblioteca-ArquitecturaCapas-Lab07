@@ -40,7 +40,14 @@ namespace Biblioteca.Negocio
                 throw new ReglaNegocioException("El socio no existe o ya está dado de baja.");
             if (await _socios.TienePrestamosPendientesAsync(socioId).ConfigureAwait(false))
                 throw new ReglaNegocioException("No se puede dar de baja un socio con préstamos pendientes.");
-            await _socios.DarDeBajaAsync(socioId).ConfigureAwait(false);
+            try
+            {
+                await _socios.DarDeBajaAsync(socioId).ConfigureAwait(false);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new ReglaNegocioException(ex.Message);
+            }
         }
 
         private static void Validar(Socio socio)

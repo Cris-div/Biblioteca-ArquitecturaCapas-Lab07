@@ -50,7 +50,7 @@ namespace Biblioteca.Negocio
             if (fechaLimite.Date < hoy) throw new ReglaNegocioException("La fecha límite no puede ser anterior a hoy.");
             try
             {
-                return await _prestamos.RegistrarAsync(socioId, ids, hoy, fechaLimite.Date).ConfigureAwait(false);
+                return await _prestamos.RegistrarAsync(socioId, ids, hoy, fechaLimite.Date, 3).ConfigureAwait(false);
             }
             catch (InvalidOperationException ex)
             {
